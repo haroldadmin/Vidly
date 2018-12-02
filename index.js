@@ -58,6 +58,21 @@ app.put("/api/genres/:id", (req, res) => {
     }
 })
 
+app.delete("/api/genres/:id", (req, res) => {
+    const id = req.params.id;
+    const genre = findGenreById(id, genres);
+
+    if (!genre) {
+        res.status(404).send("The requested course can not be found");
+        return;
+    } else {
+        genres.splice(genres.indexOf(genre), 1);
+        res.send(genre);
+        return;
+    }
+
+})
+
 function findGenreById(id, genres) {
     return genres.find(element => element.id === parseInt(id));
 }
