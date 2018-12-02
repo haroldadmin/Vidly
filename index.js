@@ -25,7 +25,7 @@ app.get("/api/genres/:id", (req, res) => {
     }
 })
 
-app.post("/api/genres", (req, res) => {
+app.post("/api/genres/", (req, res) => {
     const genre = req.body;
     const { error } = validateGenre(genre);
     if (error) {
@@ -33,6 +33,27 @@ app.post("/api/genres", (req, res) => {
     } else {
         assignIdToGenre(genre, genres);
         genres.push(genre)
+        res.send(genre);
+    }
+})
+
+app.put("/api/genres/:id", (req, res) => {
+    const id = req.params.id;
+    const genre = findGenreById(id, genres);
+
+    if (!genre) {
+        res.status(404).send("The requested course can not be found");
+        return;
+    }
+
+    const updatedGenre = req.body;
+    const { error } = validateGenre(updatedGenre);
+
+    if (error) {
+        res.status(400).send(error.details[0].message);
+        return;
+    } else {
+        genre.name = updatedGenre.name;
         res.send(genre);
     }
 })
