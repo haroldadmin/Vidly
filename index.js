@@ -6,10 +6,10 @@ app.use(Express.json());
 const port = process.env.PORT || 3000;
 
 const genres = [
-    { id: 1, name: 'Action' },  
-    { id: 2, name: 'Horror' },  
-    { id: 3, name: 'Romance' },  
-  ];
+    { id: 1, name: 'Action' },
+    { id: 2, name: 'Horror' },
+    { id: 3, name: 'Romance' },
+];
 
 app.get("/api/genres/", (req, res) => {
     res.send(genres);
@@ -25,8 +25,32 @@ app.get("/api/genres/:id", (req, res) => {
     }
 })
 
+app.post("/api/genres", (req, res) => {
+    const genre = req.body;
+    const { error } = validateGenre(genre);
+    if (error) {
+        res.status(400).send(error.details[0].message);
+    } else {
+        assignIdToGenre(genre, genres);
+        genres.push(genre)
+        res.send(genre);
+    }
+})
+
 function findGenreById(id, genres) {
     return genres.find(element => element.id === parseInt(id));
+}
+
+function validateGenre(genre) {
+    const schema = {
+        name: Joi.string().min(3).required()
+    }
+    return Joi.validate(genre, schema);
+}
+
+function assignIdToGenre(genre, genres) {
+    const newId = genres.length + 1;
+    genre.id = newId;
 }
 
 app.listen(port, () => {
