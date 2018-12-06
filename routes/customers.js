@@ -1,7 +1,5 @@
 const app = require('express');
-const mongoose = require('mongoose');
-const Joi = require('joi');
-const Customer = require('../db/models').Customer;
+const { Customer, validateCustomer } = require('../models/customer');
 
 const router = app.Router();
 
@@ -62,14 +60,5 @@ router.delete("/:id", async (req, res) => {
         if (ex.name === "CastError") res.status(400).send("Invalid ID");
     }
 })
-
-function validateCustomer(customer) {
-    const schema = {
-        name: Joi.string().min(2).required(),
-        phone: Joi.number().required(),
-        isGold: Joi.boolean().default(false)
-    }
-    return Joi.validate(customer, schema);
-}
 
 module.exports = router;

@@ -1,6 +1,5 @@
 const express = require('express');
-const Joi = require('joi');
-const Genre = require('../db/models').Genre;
+const { Genre, validateGenre }  = require('../models/genre');
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -63,12 +62,5 @@ router.delete("/:id", async (req, res) => {
         if (ex.name === "CastError") res.status(400).send("Invalid ID");
     }
 })
-
-function validateGenre(genre) {
-    const schema = {
-        name: Joi.string().min(3).required()
-    }
-    return Joi.validate(genre, schema);
-}
 
 module.exports = router;
