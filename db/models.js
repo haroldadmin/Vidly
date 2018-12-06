@@ -9,4 +9,21 @@ const Genre = mongoose.model("Genre", new mongoose.Schema({
     }
 }));
 
+const Customer = mongoose.model("Customer", new mongoose.Schema({
+    name: {
+        type: String,
+        minlength: 2,
+        required: true
+    },
+    phone: {
+        type: Number,
+        required: true
+    },
+    isGold: {
+        type: Boolean,
+        default: false
+    }
+}))
+
 module.exports.Genre = Genre;
+module.exports.Customer = Customer;
