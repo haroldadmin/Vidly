@@ -1,6 +1,5 @@
 // Network imports
 const Express = require('express');
-const Joi = require('joi');
 const genresRouter = require('./routes/genres');
 const customersRouter = require('./routes/customers');
 
