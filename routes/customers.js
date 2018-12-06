@@ -46,7 +46,18 @@ router.put("/:id", async (req, res) => {
             phone: req.body.phone,
             isGold: req.body.isGold
         }, { new: true });
+        if (!customer) return res.status(404).send("A course with the given ID could not be found.")
         return res.send(customer);
+    } catch(ex) {
+        if (ex.name === "CastError") res.status(400).send("Invalid ID");
+    }
+})
+
+router.delete("/:id", async (req, res) => {
+    try {
+        const result = await Customer.findByIdAndDelete(req.params.id);
+        if (!result) res.status(404).send("A course with the given ID could not be found");
+        return res.send(result);
     } catch(ex) {
         if (ex.name === "CastError") res.status(400).send("Invalid ID");
     }
