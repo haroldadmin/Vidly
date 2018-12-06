@@ -10,11 +10,15 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
-    const genre = await Genre.findById(id)
-    if (genre) {
-        res.send(genre);
-    } else {
-        res.status(404).send("Can not find genre with that ID");
+    try {
+        const genre = await Genre.findById(id)
+        if (genre) {
+            res.send(genre);
+        } else {
+            res.status(404).send("Can not find genre with that ID");
+        }
+    } catch (ex) {
+        if (ex.name === "CastError") res.status(400).send("Invalid ID")
     }
 })
 
@@ -35,20 +39,28 @@ router.put("/:id", async (req, res) => {
         res.status(400).send(error.details[0].message);
         return;
     }
-    const genre = await Genre.findByIdAndUpdate(req.params.id, { name: req.body.name }, { new: true });
-    if (!genre) {
-        res.status(404).send("The requested course can not be found");
-    } else {
-        res.send(genre);
+    try {
+        const genre = await Genre.findByIdAndUpdate(req.params.id, { name: req.body.name }, { new: true });
+        if (!genre) {
+            res.status(404).send("The requested course can not be found");
+        } else {
+            res.send(genre);
+        }
+    } catch (ex) {
+        if (ex.name === "CastError") res.status(400).send("Invalid ID")
     }
 })
 
 router.delete("/:id", async (req, res) => {
-    const genre = await Genre.findByIdAndDelete(req.params.id,)
-    if (!genre) {
-        res.status(404).send("The requested course can not be found");
-    } else {
-        res.send(genre);
+    try {
+        const genre = await Genre.findByIdAndDelete(req.params.id)
+        if (!genre) {
+            res.status(404).send("The requested course can not be found");
+        } else {
+            res.send(genre);
+        }
+    } catch (ex) {
+        if (ex.name === "CastError") res.status(400).send("Invalid ID");
     }
 })
 
