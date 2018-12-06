@@ -19,4 +19,46 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+router.post("/", async (req, res) => {
+    const { error } = validateCustomer(req.body);
+    if (error) {
+        res.status(400).send(error.details[0].message)
+        return;
+    }
+    const customer = new Customer({
+        name: req.body.name,
+        phone: req.body.phone,
+        isGold: req.body.isGold
+    })
+    const result = await customer.save();
+    res.send(result);
+})
+
+router.put("/:id", async (req, res) => {
+    const { error } = validateCustomer(req.body);
+    if (error) {
+        res.status(400).send(error.details[0].message);
+        return;
+    }
+    try {
+        const customer = await Customer.findByIdAndUpdate(req.params.id, { 
+            name: req.body.name,
+            phone: req.body.phone,
+            isGold: req.body.isGold
+        }, { new: true });
+        return res.send(customer);
+    } catch(ex) {
+        if (ex.name === "CastError") res.status(400).send("Invalid ID");
+    }
+})
+
+function validateCustomer(customer) {
+    const schema = {
+        name: Joi.string().min(2).required(),
+        phone: Joi.number().required(),
+        isGold: Joi.boolean().default(false)
+    }
+    return Joi.validate(customer, schema);
+}
+
 module.exports = router;
