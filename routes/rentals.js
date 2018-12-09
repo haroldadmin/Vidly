@@ -12,10 +12,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         const rental = await Rental.findById(req.params.id);
-        if (!rental) {
-            res.status(404).send("A Rental with the requested ID could not be found");
-            return;
-        }
+        if (!rental) { return res.status(404).send("A Rental with the requested ID could not be found"); }
         res.send(rental);
     } catch (ex) {
         if (ex.name === "CastError") res.status(400).send("Invalid ID");
@@ -25,18 +22,12 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
     const { error } = validateRental(req.body);
-    if (error) {
-        res.status(400).send(error.details[0].message);
-        return;
-    }
+    if (error) { return res.status(400).send(error.details[0].message); }
 
     let movie;
     try {
         movie = await Movie.findById(req.body.movieId);
-        if (!movie) {
-            res.status(404).send("A movie with the requested ID could not be found");
-            return;
-        }
+        if (!movie) { return res.status(404).send("A movie with the requested ID could not be found"); }
     } catch (ex) {
         if (ex.name === "CastError") res.status(400).send("Invalid movie ID");
         else console.log(ex);
@@ -46,10 +37,7 @@ router.post("/", async (req, res) => {
     let customer;
     try {
         customer = await Customer.findById(req.body.customerId);
-        if (!customer) {
-            res.status(404).send("A customer with the requested ID could not be found");
-            return;
-        }
+        if (!customer) { return res.status(404).send("A customer with the requested ID could not be found"); }
     } catch (ex) {
         if (ex.name === "CastError") res.status(400).send("Invalid customer ID");
         else console.log(ex);
@@ -77,17 +65,11 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
     const { error } = validateRental(req.body);
-    if (error) {
-        res.status(400).send(error.details[0].message);
-        return;
-    }
+    if (error) { return res.status(400).send(error.details[0].message); }
     let movie;
     try {
         movie = await Movie.findById(req.body.movieId);
-        if (!movie) {
-            res.status(404).send("A movie with the requested ID could not be found.");
-            return;
-        }
+        if (!movie) { return res.status(404).send("A movie with the requested ID could not be found."); }
     } catch (ex) {
         if (ex.name === "CastError") res.status(400).send("Invalid Movie ID");
         return;
@@ -95,14 +77,9 @@ router.put("/:id", async (req, res) => {
     let customer;
     try {
         customer = await Customer.findById(req.body.customerId);
-        if (!customer) {
-            res.status(404).send("A customer with the requested ID could not be found");
-            return;
-        }
+        if (!customer) { return res.status(404).send("A customer with the requested ID could not be found"); }
     } catch (ex) {
-        res.status(400).send("Invalid customer ID");
-        return;
-    }
+        return res.status(400).send("Invalid customer ID"); }
     try {
         const rental = await Rental.findByIdAndUpdate(req.params.id, {
             movie: {
@@ -114,10 +91,7 @@ router.put("/:id", async (req, res) => {
                 name: customer.name
             }
         }, { new: true });
-        if (!rental) {
-            res.status(404).send("A rental with the requested ID could not be found.")
-            return;
-        }
+        if (!rental) { return res.status(404).send("A rental with the requested ID could not be found.") }
         res.send(rental);
         return;
     } catch (ex) {
@@ -128,10 +102,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         const result = await Rental.findByIdAndDelete(req.params.id);
-        if (!result) {
-            res.status(404).send("A rental with the requestd ID could not be found.");
-            return;
-        }
+        if (!result) { return res.status(404).send("A rental with the requestd ID could not be found."); }
         res.send(result);
     } catch (ex) {
         if (ex.name === "CastError") res.status(400).send("Invalid ID");
