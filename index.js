@@ -4,6 +4,7 @@ const genresRouter = require('./routes/genres');
 const customersRouter = require('./routes/customers');
 const moviesRouter = require('./routes/movies');
 const rentalsRouter = require('./routes/rentals');
+const usersRouter = require('./routes/users');
 
 // Database imports
 const mongoose = require('mongoose');
@@ -14,6 +15,7 @@ app.use('/api/genres/', genresRouter);
 app.use('/api/customers/', customersRouter);
 app.use('/api/movies/', moviesRouter);
 app.use('/api/rentals/', rentalsRouter);
+app.use('/api/users/', usersRouter);
 
 // Database connection
 mongoose.connect("mongodb://localhost/vidly")

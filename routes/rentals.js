@@ -28,6 +28,7 @@ router.post("/", async (req, res) => {
     try {
         movie = await Movie.findById(req.body.movieId);
         if (!movie) { return res.status(404).send("A movie with the requested ID could not be found"); }
+        if (movie.numberInStock == 0) return res.status(400).send("Movie not in stock");
     } catch (ex) {
         if (ex.name === "CastError") res.status(400).send("Invalid movie ID");
         else console.log(ex);
@@ -56,6 +57,8 @@ router.post("/", async (req, res) => {
     });
     try {
         const result = await rental.save();
+        movie.numberInStock -= 1;
+        await movie.save();
         res.send(result);
     } catch (ex) {
         res.status(500);

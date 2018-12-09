@@ -53,4 +53,4 @@ function validateRental(rental) {
 
 module.exports.rentalSchema = rentalSchema;
 module.exports.Rental = Rental,
-    module.exports.validateRental = validateRental;
+module.exports.validateRental = validateRental;
