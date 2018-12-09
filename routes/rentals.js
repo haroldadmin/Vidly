@@ -1,5 +1,6 @@
 const app = require('express');
 const router = app.Router();
+const auth = require('../middleware/auth');
 const { Rental, validateRental } = require('../models/rental');
 const { Movie } = require('../models/movie');
 const { Customer } = require('../models/customer');
@@ -20,7 +21,7 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
     const { error } = validateRental(req.body);
     if (error) { return res.status(400).send(error.details[0].message); }
 
@@ -66,7 +67,7 @@ router.post("/", async (req, res) => {
     }
 })
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
     const { error } = validateRental(req.body);
     if (error) { return res.status(400).send(error.details[0].message); }
     let movie;
@@ -82,7 +83,8 @@ router.put("/:id", async (req, res) => {
         customer = await Customer.findById(req.body.customerId);
         if (!customer) { return res.status(404).send("A customer with the requested ID could not be found"); }
     } catch (ex) {
-        return res.status(400).send("Invalid customer ID"); }
+        return res.status(400).send("Invalid customer ID");
+    }
     try {
         const rental = await Rental.findByIdAndUpdate(req.params.id, {
             movie: {
@@ -102,7 +104,7 @@ router.put("/:id", async (req, res) => {
     }
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
     try {
         const result = await Rental.findByIdAndDelete(req.params.id);
         if (!result) { return res.status(404).send("A rental with the requestd ID could not be found."); }
