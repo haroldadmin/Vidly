@@ -1,6 +1,7 @@
 const app = require('express');
 const router = app.Router();
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const { Rental, validateRental } = require('../models/rental');
 const { Movie } = require('../models/movie');
 const { Customer } = require('../models/customer');
@@ -104,7 +105,7 @@ router.put("/:id", auth, async (req, res) => {
     }
 })
 
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
     try {
         const result = await Rental.findByIdAndDelete(req.params.id);
         if (!result) { return res.status(404).send("A rental with the requestd ID could not be found."); }
