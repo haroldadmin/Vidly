@@ -4,7 +4,7 @@
   "description": "A video rental service ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Kshitij",
   "license": "ISC",
@@ -12,6 +12,7 @@
     "bcrypt": "^3.0.2",
     "config": "^3.0.0",
     "express": "^4.16.4",
+    "jest": "^23.6.0",
     "joi": "^14.3.0",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
